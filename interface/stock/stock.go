@@ -2,11 +2,11 @@ package istock
 
 import (
 	"fmt"
+	"go-stock/pkg/transfer"
 	"net/http"
 	"strconv"
 	"strings"
 
-	"github.com/djimenez/iconv-go"
 	"github.com/gin-gonic/gin"
 	"github.com/guonaihong/gout"
 )
@@ -28,7 +28,7 @@ func Index(r *gin.Context) {
 	for _, v := range dataS {
 		dataT := make(map[string]interface{}, 0)
 		sliceData := strings.Split(v, ",")
-		dataT["name"], _ = iconv.ConvertString(sliceData[0], "gbk", "utf-8")
+		dataT["name"] = transfer.ConvertToString(sliceData[0], "gbk", "utf-8")
 		dataT["name"] = strings.Trim(dataT["name"].(string), `"`)
 		dataT["now_point"] = sliceData[1]
 		dataT["now_change"] = sliceData[2]
@@ -49,10 +49,10 @@ func Index(r *gin.Context) {
 
 //Detail 自选详情
 func Detail(r *gin.Context) {
-	strCode := "sz002697,sz000876"
-	mapCode := make(map[string]int)
-	mapCode["sz002697"] = 100
-	mapCode["sz000876"] = 200
+	strCode := "sz002697,sz000876,sz002007,sz002457,sz002695,sh603886,sz002456"
+	// mapCode := make(map[string]int)
+	// mapCode["sz002697"] = 100
+	// mapCode["sz000876"] = 200
 	url := "http://hq.sinajs.cn/list=" + strCode
 	var resData string
 	var httpCode int
@@ -68,7 +68,7 @@ func Detail(r *gin.Context) {
 	for _, v := range dataS {
 		dataT := make(map[string]interface{}, 0)
 		sliceData := strings.Split(v, ",")
-		dataT["name"], _ = iconv.ConvertString(sliceData[0], "gbk", "utf-8")
+		dataT["name"] = transfer.ConvertToString(sliceData[0], "gbk", "utf-8")
 		dataT["name"] = strings.Trim(dataT["name"].(string), `"`)
 		dataT["opening_price"] = sliceData[1]
 		dataT["closing_price"] = sliceData[2]
